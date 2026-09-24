@@ -1,0 +1,25 @@
+# secrets
+.env
+.env.*
+!.env.example
+
+# python
+venv/
+.venv/
+__pycache__/
+*.pyc
+.ruff_cache/
+
+# local databases
+*.db
+*.sqlite3
+
+# frontend
+frontend/node_modules/
+frontend/dist/
+
+# editors and os
+.vscode/
+.idea/
+.DS_Store
+Thumbs.db

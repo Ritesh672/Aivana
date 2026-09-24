@@ -1,0 +1,10 @@
+line-length = 110
+target-version = "py312"
+
+[lint]
+select = ["E", "W", "F", "B", "UP", "SIM", "I"]
+# fastapi's Depends() in argument defaults is the intended pattern
+ignore = ["B008"]
+
+[lint.isort]
+known-first-party = ["config", "db", "deps", "llm_service", "routes", "security"]

@@ -1,0 +1,123 @@
+{
+  "app": {
+    "title": "Aivana",
+    "loading": "Loading..."
+  },
+  "auth": {
+    "loginTitle": "Welcome back",
+    "signupTitle": "Create your account",
+    "subtitle": "One place for Claude, GPT, Grok, DeepSeek and more.",
+    "email": "Email",
+    "password": "Password",
+    "passwordHint": "At least 8 characters",
+    "login": "Log in",
+    "signup": "Sign up",
+    "noAccount": "New here?",
+    "haveAccount": "Already have an account?"
+  },
+  "sidebar": {
+    "newChat": "New chat",
+    "search": "Search",
+    "searchPlaceholder": "Search chats...",
+    "collapse": "Toggle sidebar",
+    "close": "Close",
+    "menu": "Menu",
+    "chats": "Chats",
+    "empty": "Your chats will show up here",
+    "noResults": "No matching chats",
+    "today": "Today",
+    "yesterday": "Yesterday",
+    "week": "Previous 7 days",
+    "older": "Older",
+    "deleteChat": "Delete chat",
+    "confirmDelete": "Delete this chat? This can't be undone.",
+    "settings": "Settings",
+    "light": "Light mode",
+    "dark": "Dark mode",
+    "logout": "Log out"
+  },
+  "picker": {
+    "label": "Choose model",
+    "search": "Search models",
+    "none": "No models found",
+    "locked": "Add an API key in Settings to use this model",
+    "latest": "Latest",
+    "all": "Show all models ({{count}})",
+    "fewer": "Show fewer",
+    "free": "Free"
+  },
+  "chat": {
+    "heroTitle": "What do you want to know?",
+    "placeholderHero": "Ask anything...",
+    "placeholder": "Ask a follow-up...",
+    "send": "Send",
+    "stop": "Stop",
+    "jump": "Jump to latest",
+    "hint": "Enter to send · Shift + Enter for a new line",
+    "suggestions": {
+      "explain": "Explain a concept",
+      "code": "Write some code",
+      "summarize": "Summarize text",
+      "plan": "Plan a trip"
+    },
+    "suggestionPrompts": {
+      "explain": "Explain how the internet works in simple terms.",
+      "code": "Write a Python function that checks whether a string is a palindrome.",
+      "summarize": "Summarize the following text in 3 bullet points:\n\n",
+      "plan": "Help me plan a 3-day trip to Goa on a budget."
+    },
+    "freeHint": "You're on a free model.",
+    "freeHintAction": "Add an API key to use Claude, GPT and more",
+    "switched": "Now using {{model}} with your new key."
+  },
+  "message": {
+    "copy": "Copy",
+    "copied": "Copied",
+    "stopped": "Stopped",
+    "thinking": "Thinking"
+  },
+  "errors": {
+    "missing_key": "Add your {{provider}} API key in Settings to use this model.",
+    "invalid_key": "Your {{provider}} API key was rejected.",
+    "rate_limit": "{{provider}} rate limit or quota reached. Wait a bit and try again.",
+    "model_unavailable": "This model isn't available on your {{provider}} account.",
+    "model_down": "{{provider}} is not responding right now. Try again or switch models.",
+    "network": "Can't reach the server. Is the backend running?",
+    "notSent": "Your message is back in the box so you can try again.",
+    "openSettings": "Open Settings",
+    "dismiss": "Dismiss",
+    "free_limit": "You've used today's free replies. Add your own API key in Settings to keep chatting."
+  },
+  "settings": {
+    "title": "Settings",
+    "back": "Close settings",
+    "saved": "Saved",
+    "general": "General",
+    "theme": "Appearance",
+    "light": "Light",
+    "dark": "Dark",
+    "interface": "Interface language",
+    "reply": "Replies",
+    "replyMode": "Reply language",
+    "mode_auto": "Auto",
+    "mode_match": "Match",
+    "mode_fixed": "Fixed",
+    "modeDesc_auto": "The model decides which language to use.",
+    "modeDesc_match": "Replies in the language you write in.",
+    "modeDesc_fixed": "Always replies in the language you pick.",
+    "fixedLanguage": "Language",
+    "keysTitle": "API keys",
+    "keysHelp": "Keys are encrypted before they're stored and never shown again after saving.",
+    "status_saved": "Connected",
+    "status_server": "Using server key",
+    "status_missing": "Not connected",
+    "replace": "Replace",
+    "addKey": "Add key",
+    "remove": "Remove",
+    "keyPlaceholder": "Paste your API key",
+    "saveKey": "Save",
+    "cancel": "Cancel",
+    "status_free": "Free · included",
+    "ownKey": "Use my own key"
+  }
+}

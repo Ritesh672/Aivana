@@ -1,0 +1,123 @@
+{
+  "app": {
+    "title": "Aivana",
+    "loading": "Cargando..."
+  },
+  "auth": {
+    "loginTitle": "Bienvenido de nuevo",
+    "signupTitle": "Crea tu cuenta",
+    "subtitle": "Claude, GPT, Grok, DeepSeek y más en un solo lugar.",
+    "email": "Correo electrónico",
+    "password": "Contraseña",
+    "passwordHint": "Al menos 8 caracteres",
+    "login": "Iniciar sesión",
+    "signup": "Registrarse",
+    "noAccount": "¿Eres nuevo?",
+    "haveAccount": "¿Ya tienes cuenta?"
+  },
+  "sidebar": {
+    "newChat": "Nuevo chat",
+    "search": "Buscar",
+    "searchPlaceholder": "Buscar chats...",
+    "collapse": "Mostrar u ocultar barra lateral",
+    "close": "Cerrar",
+    "menu": "Menú",
+    "chats": "Chats",
+    "empty": "Tus chats aparecerán aquí",
+    "noResults": "No hay chats que coincidan",
+    "today": "Hoy",
+    "yesterday": "Ayer",
+    "week": "Últimos 7 días",
+    "older": "Anteriores",
+    "deleteChat": "Eliminar chat",
+    "confirmDelete": "¿Eliminar este chat? No se puede deshacer.",
+    "settings": "Ajustes",
+    "light": "Modo claro",
+    "dark": "Modo oscuro",
+    "logout": "Cerrar sesión"
+  },
+  "picker": {
+    "label": "Elegir modelo",
+    "search": "Buscar modelos",
+    "none": "No se encontraron modelos",
+    "locked": "Añade una clave API en Ajustes para usar este modelo",
+    "latest": "Nuevo",
+    "all": "Ver todos los modelos ({{count}})",
+    "fewer": "Ver menos",
+    "free": "Gratis"
+  },
+  "chat": {
+    "heroTitle": "¿Qué quieres saber?",
+    "placeholderHero": "Pregunta lo que quieras...",
+    "placeholder": "Haz otra pregunta...",
+    "send": "Enviar",
+    "stop": "Detener",
+    "jump": "Ir al final",
+    "hint": "Enter para enviar · Shift + Enter para una nueva línea",
+    "suggestions": {
+      "explain": "Explicar un concepto",
+      "code": "Escribir código",
+      "summarize": "Resumir un texto",
+      "plan": "Planear un viaje"
+    },
+    "suggestionPrompts": {
+      "explain": "Explica cómo funciona internet en términos sencillos.",
+      "code": "Escribe una función en Python que compruebe si una cadena es un palíndromo.",
+      "summarize": "Resume el siguiente texto en 3 puntos:\n\n",
+      "plan": "Ayúdame a planear un viaje de 3 días a Goa con poco presupuesto."
+    },
+    "freeHint": "Estás usando un modelo gratuito.",
+    "freeHintAction": "Añade una clave API para usar Claude, GPT y más",
+    "switched": "Ahora usas {{model}} con tu nueva clave."
+  },
+  "message": {
+    "copy": "Copiar",
+    "copied": "Copiado",
+    "stopped": "Detenido",
+    "thinking": "Pensando"
+  },
+  "errors": {
+    "missing_key": "Añade tu clave API de {{provider}} en Ajustes para usar este modelo.",
+    "invalid_key": "Tu clave API de {{provider}} fue rechazada.",
+    "rate_limit": "Se alcanzó el límite o la cuota de {{provider}}. Espera un poco e inténtalo de nuevo.",
+    "model_unavailable": "Este modelo no está disponible en tu cuenta de {{provider}}.",
+    "model_down": "{{provider}} no responde ahora mismo. Inténtalo de nuevo o cambia de modelo.",
+    "network": "No se puede conectar con el servidor. ¿Está funcionando el backend?",
+    "notSent": "Tu mensaje volvió al cuadro para que puedas reintentarlo.",
+    "openSettings": "Abrir ajustes",
+    "dismiss": "Cerrar",
+    "free_limit": "Ya usaste las respuestas gratuitas de hoy. Añade tu propia clave API en Ajustes para seguir."
+  },
+  "settings": {
+    "title": "Ajustes",
+    "back": "Cerrar ajustes",
+    "saved": "Guardado",
+    "general": "General",
+    "theme": "Apariencia",
+    "light": "Claro",
+    "dark": "Oscuro",
+    "interface": "Idioma de la interfaz",
+    "reply": "Respuestas",
+    "replyMode": "Idioma de las respuestas",
+    "mode_auto": "Auto",
+    "mode_match": "Igual",
+    "mode_fixed": "Fijo",
+    "modeDesc_auto": "El modelo decide qué idioma usar.",
+    "modeDesc_match": "Responde en el idioma en que escribes.",
+    "modeDesc_fixed": "Siempre responde en el idioma que elijas.",
+    "fixedLanguage": "Idioma",
+    "keysTitle": "Claves API",
+    "keysHelp": "Las claves se cifran antes de guardarse y nunca se vuelven a mostrar.",
+    "status_saved": "Conectado",
+    "status_server": "Usando clave del servidor",
+    "status_missing": "Sin conectar",
+    "replace": "Reemplazar",
+    "addKey": "Añadir clave",
+    "remove": "Quitar",
+    "keyPlaceholder": "Pega tu clave API",
+    "saveKey": "Guardar",
+    "cancel": "Cancelar",
+    "status_free": "Gratis · incluido",
+    "ownKey": "Usar mi propia clave"
+  }
+}
