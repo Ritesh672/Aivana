@@ -1,0 +1,13 @@
+# keep secrets and local files out of the image
+.env
+.env.*
+!.env.example
+.git
+venv/
+.venv/
+**/__pycache__/
+*.db
+backend/uploads/
+frontend/node_modules/
+frontend/dist/
+.ruff_cache/

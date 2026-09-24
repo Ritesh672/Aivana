@@ -1,0 +1,29 @@
+# render blueprint: in render, choose New -> Blueprint and pick this repo.
+# values marked "sync: false" are secrets; render asks for them on first deploy.
+services:
+  - type: web
+    name: aivana
+    runtime: docker
+    plan: free
+    healthCheckPath: /api/models
+    envVars:
+      - key: COOKIE_SECURE          # the site is served over https
+        value: "true"
+      - key: ALLOW_SERVER_KEYS      # users bring their own paid keys
+        value: "false"
+      - key: FREE_MODELS_ENABLED
+        value: "true"
+      - key: FREE_DAILY_LIMIT
+        value: "50"
+      - key: DATABASE_URL           # supabase session pooler string
+        sync: false
+      - key: JWT_SECRET
+        sync: false
+      - key: ENCRYPTION_KEY         # must match the one used locally, or saved keys can't be read
+        sync: false
+      - key: HF_TOKEN
+        sync: false
+      - key: SUPABASE_URL
+        sync: false
+      - key: SUPABASE_SERVICE_KEY
+        sync: false
