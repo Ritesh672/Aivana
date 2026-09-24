@@ -34,7 +34,8 @@
     "settings": "Settings",
     "light": "Light mode",
     "dark": "Dark mode",
-    "logout": "Log out"
+    "logout": "Log out",
+    "documents": "Documents"
   },
   "picker": {
     "label": "Choose model",
@@ -74,7 +75,9 @@
     "copy": "Copy",
     "copied": "Copied",
     "stopped": "Stopped",
-    "thinking": "Thinking"
+    "thinking": "Thinking",
+    "sources": "Sources",
+    "page": "p. {{page}}"
   },
   "errors": {
     "missing_key": "Add your {{provider}} API key in Settings to use this model.",
@@ -119,5 +122,29 @@
     "cancel": "Cancel",
     "status_free": "Free · included",
     "ownKey": "Use my own key"
+  },
+  "documents": {
+    "title": "Documents",
+    "subtitle": "Upload PDFs, then attach them to any chat and ask questions. Answers cite the pages they come from.",
+    "upload": "Upload PDF",
+    "library": "Your documents",
+    "attach": "Attach documents",
+    "attachEmpty": "Upload a PDF to ask questions about it.",
+    "manage": "Manage documents",
+    "detach": "Remove from chat",
+    "dropHint": "Drop PDFs here or click to upload",
+    "limits": "PDF only · up to {{mb}} MB and {{pages}} pages · {{used}} of {{max}} used",
+    "empty": "No documents yet",
+    "uploading": "Uploading {{progress}}%",
+    "processing": "Processing {{progress}}%",
+    "failed": "Couldn't process",
+    "pages_one": "{{count}} page",
+    "pages_other": "{{count}} pages",
+    "delete": "Delete",
+    "confirmDelete": "Delete this document? It will be removed from every chat it's attached to.",
+    "waitProcessing": "Wait for your documents to finish processing",
+    "notPdf": "Only PDF files are supported for now.",
+    "tooLarge": "This file is larger than {{mb}} MB.",
+    "unavailable": "Documents aren't available on this server. They need PostgreSQL with the pgvector extension."
   }
 }

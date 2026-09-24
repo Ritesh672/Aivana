@@ -1,6 +1,7 @@
 import { useEffect, useLayoutEffect, useRef, useState } from "react";
 import { useTranslation } from "react-i18next";
 import { api, streamChat } from "../api";
+import { AttachedChips, AttachMenu } from "./Attachments";
 import { ArrowDownIcon, ArrowUpIcon, CloseIcon, StopIcon } from "./Icons";
 import MessageBubble from "./MessageBubble";
 import ModelPicker from "./ModelPicker";
@@ -33,8 +34,8 @@ function readModel() {
 }
 
 export default function ChatView({
-  chatId, catalog, modelsById, keyReady,
-  onChatCreated, onChatUpdated, onChatRemoved, onTurnFinished, onOpenSettings,
+  chatId, catalog, modelsById, keyReady, library,
+  onChatCreated, onChatUpdated, onChatRemoved, onTurnFinished, onOpenSettings, onOpenDocuments,
 }) {
   const { t, i18n } = useTranslation();
   const models = catalog.models;
@@ -45,6 +46,9 @@ export default function ChatView({
   const [draft, setDraft] = useState("");
   const [model, setModel] = useState(readModel);
   const [atBottom, setAtBottom] = useState(true);
+  // documents attached to this chat (ids); sent with every message
+  const [attached, setAttached] = useState([]);
+  const [dragging, setDragging] = useState(false);
 
   const autoRef = useRef(read(AUTO_KEY) !== "0");
   const prevReadyRef = useRef(null);
@@ -124,6 +128,7 @@ export default function ChatView({
     setAtBottom(true);
     if (!chatId) {
       setMessages([]);
+      setAttached([]);
       inputRef.current?.focus();
       return;
     }
@@ -134,10 +139,54 @@ export default function ChatView({
       .then((list) => !cancelled && setMessages(list))
       .catch(() => !cancelled && setMessages([]))
       .finally(() => !cancelled && setLoading(false));
+    setAttached([]);
+    if (library.enabled) {
+      api
+        .chatDocuments(chatId)
+        .then((list) => !cancelled && setAttached(list.map((d) => d.id)))
+        .catch(() => {});
+    }
     return () => {
       cancelled = true;
     };
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [chatId]);
+
+  // ---------- documents ----------
+
+  function attach(id) {
+    setAttached((list) => (list.includes(id) ? list : [...list, id]));
+  }
+
+  function detach(id) {
+    setAttached((list) => list.filter((x) => x !== id));
+    if (chatId) api.detachDocument(chatId, id).catch(() => {});
+  }
+
+  function toggleAttached(id) {
+    if (attached.includes(id)) detach(id);
+    else attach(id);
+  }
+
+  async function uploadAndAttach(files) {
+    for (const file of files) {
+      try {
+        const doc = await library.upload(file);
+        attach(doc.id);
+      } catch (e) {
+        setNotice(uploadNotice(e));
+      }
+    }
+  }
+
+  function uploadNotice(e) {
+    if (e.code === "not_pdf") return { code: "doc", message: t("documents.notPdf") };
+    if (e.code === "too_large") return { code: "doc", message: t("documents.tooLarge", { mb: library.config?.max_mb }) };
+    return { code: "doc", message: e.message };
+  }
+
+  const attachedDocs = attached.map((id) => library.byId[id]).filter(Boolean);
+  const docsBusy = library.uploads.length > 0 || attachedDocs.some((d) => d.status === "processing");
 
   // follow new tokens, unless the user scrolled up to read
   useLayoutEffect(() => {
@@ -192,10 +241,13 @@ export default function ChatView({
     }
 
     try {
-      await streamChat({ message: text, model, chatId: startChatId }, controller.signal, (event, data) => {
+      const request = { message: text, model, chatId: startChatId, documentIds: attached };
+      await streamChat(request, controller.signal, (event, data) => {
         if (event === "meta" && !startChatId) {
           createdChatRef.current = data.chat_id;
           onChatCreated({ id: data.chat_id, title: data.title, last_model: model });
+        } else if (event === "sources") {
+          updateLast((m) => ({ ...m, sources: data.sources }));
         } else if (event === "token") {
           gotTokens = true;
           updateLast((m) => ({ ...m, content: m.content + data.text }));
@@ -246,7 +298,7 @@ export default function ChatView({
   function submit(e) {
     e?.preventDefault();
     const text = draft.trim();
-    if (!text || streaming || !model) return;
+    if (!text || streaming || !model || docsBusy) return;
     setDraft("");
     send(text);
   }
@@ -269,7 +321,23 @@ export default function ChatView({
   const needsSettings = notice && ["missing_key", "invalid_key", "free_limit"].includes(notice.code);
 
   const composer = (
-    <form className="composer" onSubmit={submit}>
+    <form
+      className={`composer ${dragging ? "dragging" : ""}`}
+      onSubmit={submit}
+      onDragOver={(e) => {
+        if (!library.enabled || !e.dataTransfer.types.includes("Files")) return;
+        e.preventDefault();
+        setDragging(true);
+      }}
+      onDragLeave={() => setDragging(false)}
+      onDrop={(e) => {
+        if (!library.enabled) return;
+        e.preventDefault();
+        setDragging(false);
+        uploadAndAttach([...e.dataTransfer.files]);
+      }}
+    >
+      <AttachedChips attached={attached} byId={library.byId} uploads={library.uploads} onRemove={detach} />
       <textarea
         ref={inputRef}
         rows={empty ? 2 : 1}
@@ -285,20 +353,32 @@ export default function ChatView({
         autoFocus
       />
       <div className="composer-bar">
-        <ModelPicker
-          models={models}
-          value={model}
-          onChange={pickByUser}
-          keyReady={keyReady}
-          disabled={streaming}
-          onNeedKey={(m) => setNotice({ code: "missing_key", provider: m.provider_label })}
-        />
+        <div className="composer-tools">
+          {library.enabled && (
+            <AttachMenu
+              docs={library.docs}
+              attached={attached}
+              onToggle={toggleAttached}
+              onUpload={uploadAndAttach}
+              onManage={onOpenDocuments}
+              disabled={streaming}
+            />
+          )}
+          <ModelPicker
+            models={models}
+            value={model}
+            onChange={pickByUser}
+            keyReady={keyReady}
+            disabled={streaming}
+            onNeedKey={(m) => setNotice({ code: "missing_key", provider: m.provider_label })}
+          />
+        </div>
         {streaming ? (
           <button type="button" className="send-btn" onClick={() => abortRef.current?.abort()} aria-label={t("chat.stop")} title={t("chat.stop")}>
             <StopIcon size={14} />
           </button>
         ) : (
-          <button type="submit" className="send-btn" disabled={!draft.trim() || !model} aria-label={t("chat.send")} title={t("chat.send")}>
+          <button type="submit" className="send-btn" disabled={!draft.trim() || !model || docsBusy} aria-label={t("chat.send")} title={docsBusy ? t("documents.waitProcessing") : t("chat.send")}>
             <ArrowUpIcon size={18} />
           </button>
         )}

@@ -34,7 +34,8 @@
     "settings": "Ajustes",
     "light": "Modo claro",
     "dark": "Modo oscuro",
-    "logout": "Cerrar sesión"
+    "logout": "Cerrar sesión",
+    "documents": "Documentos"
   },
   "picker": {
     "label": "Elegir modelo",
@@ -74,7 +75,9 @@
     "copy": "Copiar",
     "copied": "Copiado",
     "stopped": "Detenido",
-    "thinking": "Pensando"
+    "thinking": "Pensando",
+    "sources": "Fuentes",
+    "page": "p. {{page}}"
   },
   "errors": {
     "missing_key": "Añade tu clave API de {{provider}} en Ajustes para usar este modelo.",
@@ -119,5 +122,30 @@
     "cancel": "Cancelar",
     "status_free": "Gratis · incluido",
     "ownKey": "Usar mi propia clave"
+  },
+  "documents": {
+    "title": "Documentos",
+    "subtitle": "Sube PDFs, adjúntalos a cualquier chat y haz preguntas. Las respuestas citan las páginas de donde salen.",
+    "upload": "Subir PDF",
+    "library": "Tus documentos",
+    "attach": "Adjuntar documentos",
+    "attachEmpty": "Sube un PDF para hacer preguntas sobre él.",
+    "manage": "Gestionar documentos",
+    "detach": "Quitar del chat",
+    "dropHint": "Suelta PDFs aquí o haz clic para subir",
+    "limits": "Solo PDF · hasta {{mb}} MB y {{pages}} páginas · {{used}} de {{max}} usados",
+    "empty": "Aún no hay documentos",
+    "uploading": "Subiendo {{progress}}%",
+    "processing": "Procesando {{progress}}%",
+    "failed": "No se pudo procesar",
+    "pages_one": "{{count}} página",
+    "pages_many": "{{count}} páginas",
+    "pages_other": "{{count}} páginas",
+    "delete": "Eliminar",
+    "confirmDelete": "¿Eliminar este documento? Se quitará de todos los chats donde esté adjunto.",
+    "waitProcessing": "Espera a que tus documentos terminen de procesarse",
+    "notPdf": "Por ahora solo se admiten archivos PDF.",
+    "tooLarge": "Este archivo supera los {{mb}} MB.",
+    "unavailable": "Los documentos no están disponibles en este servidor. Necesitan PostgreSQL con la extensión pgvector."
   }
 }

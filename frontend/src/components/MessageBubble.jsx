@@ -1,8 +1,8 @@
-import { memo, useState } from "react";
+import { memo, useMemo, useState } from "react";
 import ReactMarkdown from "react-markdown";
 import remarkGfm from "remark-gfm";
 import { useTranslation } from "react-i18next";
-import { CheckIcon, CopyIcon } from "./Icons";
+import { CheckIcon, CopyIcon, FileIcon } from "./Icons";
 import ProviderMark from "./ProviderMark";
 
 function textOf(node) {
@@ -44,11 +44,73 @@ function CodeBlock({ children }) {
   );
 }
 
-const markdownComponents = { pre: CodeBlock };
+// turn the model's [1] citations into links the renderer below shows as chips.
+// numbers without a matching source are left as plain text
+function linkCitations(content, count) {
+  if (!count) return content;
+  return content.replace(/\[(\d{1,2})\](?!\()/g, (match, n) =>
+    Number(n) >= 1 && Number(n) <= count ? `[${n}](#cite-${n})` : match
+  );
+}
+
+function citedNumbers(content) {
+  return new Set([...content.matchAll(/\[(\d{1,2})\]/g)].map((m) => Number(m[1])));
+}
+
+// the passages this answer cited; click one to read it
+function Sources({ sources, open, onOpen }) {
+  const { t } = useTranslation();
+  const active = sources.find((s) => s.n === open);
+  return (
+    <div className="sources">
+      <div className="sources-row">
+        <span className="sources-label">{t("message.sources")}</span>
+        {sources.map((s) => (
+          <button
+            key={s.n}
+            type="button"
+            className={`source-chip ${open === s.n ? "open" : ""}`}
+            onClick={() => onOpen(open === s.n ? null : s.n)}
+            aria-expanded={open === s.n}
+          >
+            <span className="source-n">{s.n}</span>
+            <span className="source-name">{s.filename}</span>
+            <span className="source-page">{t("message.page", { page: s.page })}</span>
+          </button>
+        ))}
+      </div>
+      {active && (
+        <div className="source-card">
+          <div className="source-card-head">
+            <FileIcon size={14} /> {active.filename} · {t("message.page", { page: active.page })}
+          </div>
+          <p>{active.text}</p>
+        </div>
+      )}
+    </div>
+  );
+}
 
 function MessageBubble({ message, model }) {
   const { t } = useTranslation();
   const [copied, copy] = useCopy();
+  const [openSource, setOpenSource] = useState(null);
+
+  const sources = message.sources || [];
+  const components = useMemo(
+    () => ({
+      pre: CodeBlock,
+      a: ({ href, children }) =>
+        href?.startsWith("#cite-") ? (
+          <button type="button" className="cite" onClick={() => setOpenSource(Number(href.slice(6)))}>
+            {children}
+          </button>
+        ) : (
+          <a href={href} target="_blank" rel="noreferrer">{children}</a>
+        ),
+    }),
+    []
+  );
 
   if (message.role === "human") {
     return <div className="msg-q" dir="auto">{message.content}</div>;
@@ -70,12 +132,19 @@ function MessageBubble({ message, model }) {
         </div>
       ) : (
         <div className="markdown">
-          <ReactMarkdown remarkPlugins={[remarkGfm]} components={markdownComponents}>
-            {message.content}
+          <ReactMarkdown remarkPlugins={[remarkGfm]} components={components}>
+            {linkCitations(message.content, sources.length)}
           </ReactMarkdown>
           {message.streaming && <span className="cursor" />}
         </div>
       )}
+
+      {!message.streaming && sources.length > 0 && (() => {
+        // only list what the answer actually cited
+        const cited = citedNumbers(message.content);
+        const shown = sources.filter((s) => cited.has(s.n));
+        return shown.length ? <Sources sources={shown} open={openSource} onOpen={setOpenSource} /> : null;
+      })()}
 
       {!message.streaming && message.content && (
         <div className="msg-actions">

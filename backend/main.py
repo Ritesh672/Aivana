@@ -1,18 +1,24 @@
-# aivana api. from the backend folder, run: uvicorn main:app --reload
+# aivana api. run from the project root (or this folder): uvicorn main:app --reload
 from pathlib import Path
 
 from fastapi import FastAPI, HTTPException
 from fastapi.responses import FileResponse
 from fastapi.staticfiles import StaticFiles
 
-from db import init_db
+import documents
+from db import documents_enabled, init_db
 from routes import auth, chats, models, settings, stream
+from routes import documents as documents_routes
 
 app = FastAPI(title="Aivana API")
 init_db()
 
-for route_module in (auth, models, chats, stream, settings):
+for route_module in (auth, models, chats, stream, settings, documents_routes):
     app.include_router(route_module.router)
+
+# pick up documents that were still processing when the server last stopped
+if documents_enabled():
+    documents.resume_unfinished()
 
 
 # ---------- react frontend (after `npm run build` in frontend/) ----------

@@ -1,4 +1,6 @@
 # the sidebar's chat list, loading a chat's messages, deleting a chat
+import json
+
 from fastapi import APIRouter, Depends
 from sqlalchemy import or_, select
 
@@ -15,6 +17,7 @@ def chat_out(chat, last_model=None):
 
 def message_out(m):
     return {"id": m.id, "role": m.role, "content": m.content, "model": m.model,
+            "sources": json.loads(m.sources) if m.sources else [],
             "created_at": iso(m.created_at)}
 
 

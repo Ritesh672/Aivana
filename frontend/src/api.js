@@ -49,16 +49,46 @@ export const api = {
   keys: () => request("/keys"),
   saveKey: (provider, apiKey) => request(`/keys/${provider}`, { method: "PUT", body: { api_key: apiKey } }),
   deleteKey: (provider) => request(`/keys/${provider}`, { method: "DELETE" }),
+
+  documentsConfig: () => request("/documents/config"),
+  documents: () => request("/documents"),
+  deleteDocument: (id) => request(`/documents/${id}`, { method: "DELETE" }),
+  chatDocuments: (chatId) => request(`/chats/${chatId}/documents`),
+  detachDocument: (chatId, id) => request(`/chats/${chatId}/documents/${id}`, { method: "DELETE" }),
 };
 
+// upload a pdf. uses xhr (not fetch) so the upload's progress can be shown.
+// onProgress(0..1) is called as the file is sent
+export function uploadDocument(file, onProgress) {
+  return new Promise((resolve, reject) => {
+    const xhr = new XMLHttpRequest();
+    xhr.open("POST", "/api/documents");
+    xhr.upload.onprogress = (e) => e.lengthComputable && onProgress?.(e.loaded / e.total);
+    xhr.onload = () => {
+      let body = null;
+      try {
+        body = JSON.parse(xhr.responseText);
+      } catch (_) {}
+      if (xhr.status >= 200 && xhr.status < 300) return resolve(body);
+      const detail = body?.detail;
+      const message = typeof detail === "string" ? detail : detail?.message || `Upload failed (${xhr.status})`;
+      reject(new ApiError(xhr.status, detail?.code || "http_error", message));
+    };
+    xhr.onerror = () => reject(new ApiError(0, "network", "Upload failed"));
+    const form = new FormData();
+    form.append("file", file);
+    xhr.send(form);
+  });
+}
+
 // send a message and read the server-sent events as they arrive.
-// onEvent(name, data) is called for "meta", "token", "done" and "error".
+// onEvent(name, data) is called for "meta", "sources", "token", "done", "title" and "error".
 // abort the signal to stop generating.
-export async function streamChat({ message, model, chatId }, signal, onEvent) {
+export async function streamChat({ message, model, chatId, documentIds = [] }, signal, onEvent) {
   const res = await fetch("/api/chat/stream", {
     method: "POST",
     headers: { "Content-Type": "application/json" },
-    body: JSON.stringify({ message, model, chat_id: chatId }),
+    body: JSON.stringify({ message, model, chat_id: chatId, document_ids: documentIds }),
     signal,
   });
   if (!res.ok) throw await toApiError(res);

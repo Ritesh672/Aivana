@@ -4,9 +4,11 @@ import { api } from "./api";
 import { applyTheme, initialTheme } from "./theme";
 import AuthPage from "./components/AuthPage";
 import ChatView from "./components/ChatView";
+import DocumentsPage from "./components/DocumentsPage";
 import { MenuIcon, MoonIcon, PlusIcon, SunIcon } from "./components/Icons";
 import SettingsPage from "./components/SettingsPage";
 import Sidebar from "./components/Sidebar";
+import useDocuments from "./useDocuments";
 
 const COLLAPSED_KEY = "sidebar_collapsed";
 
@@ -52,6 +54,7 @@ function Workspace({ user, theme, onTheme, onLogout }) {
   const [keys, setKeys] = useState(null);
   const [collapsed, setCollapsed] = useState(readCollapsed);
   const [mobileOpen, setMobileOpen] = useState(false);
+  const library = useDocuments();
 
   const searchRef = useRef("");
   searchRef.current = search;
@@ -101,6 +104,11 @@ function Workspace({ user, theme, onTheme, onLogout }) {
     setMobileOpen(false);
   }
 
+  function openDocuments() {
+    setView("documents");
+    setMobileOpen(false);
+  }
+
   async function deleteChat(id) {
     if (!window.confirm(t("sidebar.confirmDelete"))) return;
     await api.deleteChat(id).catch(() => {});
@@ -131,6 +139,8 @@ function Workspace({ user, theme, onTheme, onLogout }) {
         onOpenChat={openChat}
         onDeleteChat={deleteChat}
         onOpenSettings={openSettings}
+        onOpenDocuments={library.enabled ? openDocuments : null}
+        view={view}
         theme={theme}
         onToggleTheme={toggleTheme}
         onLogout={logout}
@@ -163,6 +173,8 @@ function Workspace({ user, theme, onTheme, onLogout }) {
             catalog={catalog}
             modelsById={modelsById}
             keyReady={keyReady}
+            library={library}
+            onOpenDocuments={openDocuments}
             onChatCreated={(chat) => {
               setActiveChatId(chat.id);
               setChats((list) => [{ ...chat, updated_at: new Date().toISOString() }, ...list]);
@@ -178,6 +190,11 @@ function Workspace({ user, theme, onTheme, onLogout }) {
             onOpenSettings={openSettings}
           />
         </div>
+        {view === "documents" && (
+          <div className="view">
+            <DocumentsPage library={library} onBack={() => setView("chat")} />
+          </div>
+        )}
         {view === "settings" && (
           <div className="view">
             <SettingsPage

@@ -10,9 +10,10 @@ __pycache__/
 *.pyc
 .ruff_cache/
 
-# local databases
+# local data
 *.db
 *.sqlite3
+backend/uploads/
 
 # frontend
 frontend/node_modules/

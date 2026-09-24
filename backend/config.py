@@ -45,3 +45,23 @@ MAX_HISTORY_MESSAGES = int(os.getenv("MAX_HISTORY_MESSAGES", "30"))
 # user gets a daily cap on free replies
 FREE_MODELS_ENABLED = _flag("FREE_MODELS_ENABLED", "true")
 FREE_DAILY_LIMIT = int(os.getenv("FREE_DAILY_LIMIT", "50"))
+
+# documents: pdf upload and question answering (needs postgres with pgvector)
+DOC_MAX_MB = int(os.getenv("DOC_MAX_MB", "25"))
+DOC_MAX_PAGES = int(os.getenv("DOC_MAX_PAGES", "500"))
+DOC_MAX_PER_USER = int(os.getenv("DOC_MAX_PER_USER", "20"))
+DOC_TOP_K = int(os.getenv("DOC_TOP_K", "6"))  # passages given to the model per question
+
+# where original pdfs are kept. with SUPABASE_URL and SUPABASE_SERVICE_KEY set
+# they go to supabase storage; otherwise to backend/uploads (fine locally, but
+# free hosts wipe their disk on restart)
+SUPABASE_URL = os.getenv("SUPABASE_URL", "").rstrip("/")
+SUPABASE_SERVICE_KEY = os.getenv("SUPABASE_SERVICE_KEY", "")
+SUPABASE_BUCKET = os.getenv("SUPABASE_BUCKET", "documents")
+UPLOAD_DIR = BACKEND_DIR / "uploads"
+
+# embedding model for document search, via hugging face's hosted api. every
+# user shares it (vectors from different models can't be compared); changing
+# it means re-processing all documents
+EMBEDDING_MODEL = "BAAI/bge-m3"
+EMBEDDING_DIM = 1024

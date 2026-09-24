@@ -1,7 +1,7 @@
 import { useEffect, useMemo, useRef, useState } from "react";
 import { useTranslation } from "react-i18next";
 import {
-  ChevronDownIcon, CloseIcon, LogOutIcon, MoonIcon, PanelIcon, PlusIcon,
+  ChevronDownIcon, CloseIcon, FileIcon, LogOutIcon, MoonIcon, PanelIcon, PlusIcon,
   SearchIcon, SettingsIcon, SunIcon, TrashIcon,
 } from "./Icons";
 import { LogoMark } from "./Logo";
@@ -25,7 +25,7 @@ function groupOf(iso, today) {
 export default function Sidebar({
   user, chats, activeChatId, search, onSearch,
   collapsed, onToggleCollapsed, mobileOpen, onCloseMobile,
-  onNewChat, onOpenChat, onDeleteChat, onOpenSettings, theme, onToggleTheme, onLogout,
+  onNewChat, onOpenChat, onDeleteChat, onOpenSettings, onOpenDocuments, view, theme, onToggleTheme, onLogout,
 }) {
   const { t } = useTranslation();
   const [searchOpen, setSearchOpen] = useState(false);
@@ -129,6 +129,16 @@ export default function Sidebar({
           <button className="sb-item collapsed-only" onClick={openSearch} title={t("sidebar.search")}>
             <SearchIcon />
           </button>
+          {onOpenDocuments && (
+            <button
+              className={`sb-item ${view === "documents" ? "active" : ""}`}
+              onClick={onOpenDocuments}
+              title={t("sidebar.documents")}
+            >
+              <FileIcon />
+              <span>{t("sidebar.documents")}</span>
+            </button>
+          )}
         </nav>
 
         <div className="sb-body">
